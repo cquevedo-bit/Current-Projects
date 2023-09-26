@@ -96,3 +96,5 @@ main_df = pd.concat(result_dfs)
 print(main_df)
 
 conn.close()
+
+main_df.to_excel('INSERT DESIRED FILE NAME.xlsx', index=False)
