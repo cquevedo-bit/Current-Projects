@@ -23,7 +23,7 @@ def run_query_with_variable(variable):
 """)
 
     df1 = pd.read_sql_query(tsql_1Y, conn)
-    df1 = df1.query('Scenario == ["A2", "B1", "D"]')  # Leaves only the overcharge Scenarios.
+    df1 = df1.query('Scenario == ["A", "B", "C"]')  # Leaves only the overcharge Scenarios.
 
     #df = df.pivot_table('Contract #', index='Contract #', columns='Contract #', aggfunc='sum')
 
