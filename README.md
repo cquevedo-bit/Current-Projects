@@ -1,4 +1,4 @@
-# Current_Projects
+# Current Projects
 Welcome! 
 
 In my repository you will find some of my recent work referenced in my resume.
