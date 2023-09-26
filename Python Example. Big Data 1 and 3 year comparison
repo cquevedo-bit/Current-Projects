@@ -1,0 +1,98 @@
+#import numpy as np
+import pandas as pd
+#import matplotlib.pyplot as plt
+import pyodbc
+import textwrap
+#from pandas import DataFrame
+import datetime
+
+cstring = 'INSERT CONNECTION STRING'
+
+conn = pyodbc.connect(cstring)
+
+variable_list = [LIST OF 100+ VARIABLES]
+
+#Full List of systems (Alphabetical Order - System ID pulls only)
+
+result_dfs = []
+
+def run_query_with_variable(variable):
+
+    tsql_1Y = textwrap.dedent(f"""
+	INSERTED SQL QUERY
+""")
+
+    df1 = pd.read_sql_query(tsql_1Y, conn)
+    df1 = df1.query('Scenario == ["A2", "B1", "D"]')  # Leaves only the overcharge Scenarios.
+
+    #df = df.pivot_table('Contract #', index='Contract #', columns='Contract #', aggfunc='sum')
+
+    po_1 = df1['PO Received Date']
+    ad_1 = df1['Activation Date']
+    ed_1 = df1['Expiration Date']
+    sn_1 = df1['System Name']
+    si_1 = df1['System ID']
+    c_1 = df1['Contract #']
+    x_1 = df1['Qty * Confirmation Price']
+    y_1 = df1['Qty * Contract Price']
+    z_1 = df1['Difference']
+    df1 = pd.DataFrame({'PO Received Date': po_1, 'Contract #': c_1, 'Qty * Confirmation Price': x_1, 'Qty * Contract Price': y_1,
+                         'Difference': z_1, 'Activation Date': ad_1, 'Expiration Date': ed_1, 'System ID': si_1, 'System Name': sn_1})
+    df_num_1 = df1.groupby('Contract #', as_index=False)[['Qty * Confirmation Price', 'Qty * Contract Price', 'Difference']].sum(numeric_only=False)
+    df_date_1 = df1.groupby('Contract #', as_index=False).last()[['Activation Date', 'Expiration Date']]
+    df_num_date_1 = pd.concat([df_num_1, df_date_1], axis='columns')
+    df_all_1 = pd.DataFrame(df_num_date_1)
+
+    #*print(df_all_1)
+
+    tsql_3Y = textwrap.dedent(f"""
+    	INSERTED SQL QUERY
+""")
+
+    df3 = pd.read_sql_query(tsql_3Y, conn)
+    df3 = df3.query('Scenario == ["A2", "B1", "D"]')
+
+    #system_ID = variable
+
+    po_3 = df3['PO Received Date']
+    ad_3 = df3['Activation Date']
+    ed_3 = df3['Expiration Date']
+    sn_3 = df3['System Name']
+    si_3 = df3['System ID']
+    c_3 = df3['Contract #']
+    x_3 = df3['Qty * Confirmation Price']
+    y_3 = df3['Qty * Contract Price']
+    z_3 = df3['Difference']
+    df3 = pd.DataFrame({'PO Received Date': po_3, 'Contract #': c_3, 'Qty * Confirmation Price': x_3, 'Qty * Contract Price': y_3,
+                         'Difference': z_3, 'Activation Date': ad_3, 'Expiration Date': ed_3, 'System ID': si_3, 'System Name': sn_3})
+    df_num_3 = df3.groupby('Contract #', as_index=False)[['Qty * Confirmation Price', 'Qty * Contract Price', 'Difference']].sum(numeric_only=False)
+    df_date_3 = df3.groupby('Contract #', as_index=False).last()[['Activation Date', 'Expiration Date']]
+    df_num_date_3 = pd.concat([df_num_3, df_date_3], axis='columns')
+    df_all_3 = pd.DataFrame(df_num_date_3)
+
+    #*print(df_all_3)
+
+    timeLast = datetime.datetime.now().date()
+    
+    df_final = pd.merge(df_all_1, df_all_3, on='Contract #')
+    df_final['System ID'] = df1['System ID']
+    df_final['System Name'] = df1['System Name']
+    df_final["Time of Last Update"] = timeLast
+    df_final = df_final.sort_values(by='Difference_y', ascending=False) 
+
+    #*df_all = pd.DataFrame(df_num_date)    #save
+
+    print(variable)
+
+    return df_final
+
+for variable in variable_list:
+  result_df = run_query_with_variable(variable)
+
+  result_dfs.append(result_df)
+
+main_df = pd.concat(result_dfs)
+
+print(main_df)
+
+conn.close()
