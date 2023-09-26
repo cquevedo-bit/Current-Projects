@@ -1,0 +1,150 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import pyodbc
+import textwrap
+from pandas import DataFrame
+import datetime
+
+
+from sklearn.linear_model import LinearRegression
+
+cstring = 'INSERT CONNECTION STRING'
+
+conn = pyodbc.connect(cstring)
+
+sysID = 'INSERT ID OF SYSTEM'
+
+#Full contract list down below in variable_list
+variable_list = []
+
+results_dict = {'System ID':[],'Contract #':[], 'VO Potential':[], 'Valid':[], 'Coefficient':[], 'Time of Last Update':[]}
+
+result_dfs = []
+
+#actDate = ''
+
+def run_query_with_variable(variable):
+  
+    tsql = textwrap.dedent(f"""
+    	INSERTED SQL QUERY
+""")
+
+    df = pd.read_sql_query(tsql, conn)
+    df = df.query('Scenario == ["A", "B", "C"]')
+    
+    column_name = 'Qty * Confirmation Price'
+
+    column_sum = round(df[column_name].sum(), 2)
+
+   #print(f"The sum of {column_name} is : {column_sum}")  #KEEP
+
+    column_name2 = 'Qty * Contract Price'
+
+    column_sum2 = round(df[column_name2].sum(), 2)
+
+   # Qty*Contract Price Value  #KEEP
+   #print(f"The sum of {column_name2} is : {column_sum2}")  #KEEP
+
+    possibleCredit = round((column_sum - column_sum2), 2)
+
+    #if possibleCredit <= 0:
+      #data = {'Qty * Confirmation Price':[0,1,2] , 'Qty * Contract Price':[0,0,0]}
+      #df = pd.DataFrame(data)
+    if df.empty:
+      data = {'Qty * Confirmation Price':[0,1,2] , 'Qty * Contract Price':[0,0,0]}
+      df = pd.DataFrame(data)
+
+    x = df['Qty * Confirmation Price']  
+    y = df['Qty * Contract Price']
+
+    df = pd.DataFrame({'Qty * Confirmation Price': x, 'Qty * Contract Price': y})
+
+    #plt.scatter(x,y)  #KEEP
+    #plt.xlabel('X')  #KEEP
+    #plt.ylabel('Y')  #KEEP
+    #plt.title('Scatter Plt')  #KEEP
+    #plt.show()  #KEEP
+    
+    X = df['Qty * Confirmation Price'].fillna(0).values.reshape(-1,1)
+    y = df['Qty * Contract Price'].values
+
+    model = LinearRegression()
+    model.fit(X,y)
+
+    #print(model)  #KEEP
+
+    #print(df.head(100))  #KEEP
+
+    #Model Evaluation  #KEEP
+    #print('Intercept:', model.intercept_)
+    print('Coefficient:', model.coef_)
+
+    coef = model.coef_
+
+    #Model Prediction  #KEEP
+    X_new = np.array([[0.5]]) # new data point to predict
+    y_new = model.predict(X_new)
+    #print('Predicted value:', y_new)
+
+    #Saving and loading the model
+    #import joblib
+
+    #joblib.dump(model, 'linear_regression_model.2.pk1')  #save the model
+    #loaded_model = joblib.load('linear_regression_model.2.pk1')  #load the model
+
+    if model.coef_ >= 0.25:     #Threshold can be adjusted accordingly
+      contract_price = "Y"
+    else:
+      contract_price = "N"
+
+    #Adding in Time Stamp (Date of last run)
+    timeLast = datetime.datetime.now().date()
+
+    #model.score(X,y)
+    #Further analysis and visualization
+    y_pred = model.predict(X)  #Predicted values for the whole dataset
+
+    #plt.scatter(x, y)
+    #plt.plot(x, y_pred, color='r')
+    #plt.xlabel('X - Qty * Confirmation Price')
+    #plt.ylabel('Y - Qty * Contract Price')
+    #plt.title('Linear Regression')
+    #plt.show()
+
+    return sysID, possibleCredit, contract_price, coef, timeLast
+
+for variable in variable_list:
+
+  result_df = run_query_with_variable(variable)
+  result_sysID = result_df[0]
+  result_dfpc = result_df[1]
+  result_dfcp = result_df[2]
+  result_dfcoef = result_df[3]
+  result_dfTime = result_df[4]    #Time of last update
+
+  result_dfs.append(result_sysID)
+  result_dfs.append(result_dfpc)
+  result_dfs.append(result_dfcp)
+  result_dfs.append(result_dfcoef)
+  result_dfs.append(result_dfTime)    #Time of last update
+
+  results_dict['System ID'].append(result_sysID)
+  results_dict['Contract #'].append(variable)
+  results_dict['VO Potential'].append(result_dfpc)
+  results_dict['Valid'].append(result_dfcp)
+  results_dict['Coefficient'].append(result_dfcoef)
+  results_dict['Time of Last Update'].append(result_dfTime)
+
+df_results = pd.DataFrame(results_dict)
+print(df_results)
+
+#schedule.every().day.at("11:44").do(my_program())  #KEEP
+
+#while True :  #KEEP
+  #schedule.run_pending  #KEEP
+  #time.sleep(1)  #KEEP
+
+conn.close()
+
+df_results.to_excel('INSERT FILE NAME.xlsx', index=False)
