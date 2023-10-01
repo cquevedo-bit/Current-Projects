@@ -11,8 +11,8 @@ library (ggplot2)
 # Being able to identify outliers as such can aid in the ability to identify trigger points.
 # Final report could have 
 
-ACH_RESEARCH <- read_excel("C:/Users/cquevedo/OneDrive - vizientinc.com/Desktop/ACH_RESEARCH.xlsm", 
-                           sheet = "PO Data",)
+SYSTEM_RESEARCH <- read_excel("INSERT EXCEL WORKBOOK NAME", 
+                           sheet = "INSERT SHEET NAME",)
 
 # Below lines rename column names so they can be referenced via ggplot
 ACH_cut2 <- rename(ACH_RESEARCH, Confirmation_Price = 'Confirmation Price')
