@@ -15,49 +15,49 @@ SYSTEM_RESEARCH <- read_excel("INSERT EXCEL WORKBOOK NAME",
                            sheet = "INSERT SHEET NAME",)
 
 # Below lines rename column names so they can be referenced via ggplot
-ACH_cut2 <- rename(ACH_RESEARCH, Confirmation_Price = 'Confirmation Price')
-ACH_cut2 <- rename(ACH_cut2, Contract_Price = 'Contract Price')
+SYSTEM_cut2 <- rename(SYSTEM_RESEARCH, Confirmation_Price = 'Confirmation Price')
+SYSTEM_cut2 <- rename(SYSTEM_cut2, Contract_Price = 'Contract Price')
 
-summary(ACH_cut2)
+summary(SYSTEM_cut2)
 # Plotting columns for exploratory data analysis
-ggplot(ACH_cut2, aes(x = Contract_Price, y = Confirmation_Price)) + geom_point()
+ggplot(SYSTEM_cut2, aes(x = Contract_Price, y = Confirmation_Price)) + geom_point()
 
-linear_model <- lm(Confirmation_Price ~ Contract_Price, data = ACH_cut2)
+linear_model <- lm(Confirmation_Price ~ Contract_Price, data = SYSTEM_cut2)
 
 #Cleaning the data/preparing by removing NA's from 
 #   data set and replacing with 0s so analysis can be performed
-data_clean <-ifelse(is.na(ACH_cut2$Confirmation_Price), 0, ACH_cut2$Confirmation_Price)
+data_clean <-ifelse(is.na(SYSTEM_cut2$Confirmation_Price), 0, SYSTEM_cut2$Confirmation_Price)
 mean_data_1 <-mean(data_clean)
 print(mean_data_1)
 
 #Cleaning the data/preparing by removing NA's from 
 #   data set and replacing with 0s so analysis can be performed
-data_clean <-ifelse(is.na(ACH_cut2$Confirmation_Price), 0, ACH_cut2$Confirmation_Price)
+data_clean <-ifelse(is.na(SYSTEM_cut2$Confirmation_Price), 0, SYSTEM_cut2$Confirmation_Price)
 sd_data_1 <-sd(data_clean)
 print(sd_data_1)
 
 #Cleaning the data/preparing by removing NA's from 
 #   data set and replacing with 0s so analysis can be performed
-data_clean_2 <-ifelse(is.na(ACH_cut2$Contract_Price), 0, ACH_cut2$Contract_Price)
+data_clean_2 <-ifelse(is.na(SYSTEM_cut2$Contract_Price), 0, SYSTEM_cut2$Contract_Price)
 mean_data_2 <-mean(data_clean_2)
 print(mean_data_2)
 
 #Cleaning the data/preparing by removing NA's from 
 #   data set and replacing with 0s so analysis can be performed
-data_clean_2 <-ifelse(is.na(ACH_cut2$Contract_Price), 0, ACH_cut2$Contract_Price)
+data_clean_2 <-ifelse(is.na(SYSTEM_cut2$Contract_Price), 0, SYSTEM_cut2$Contract_Price)
 sd_data_2 <-sd(data_clean_2)
 print(sd_data_2)
 
-ggplot(ACH_cut2, aes(x = Contract_Price, y = Confirmation_Price)) + geom_point() + 
+ggplot(SYSTEM_cut2, aes(x = Contract_Price, y = Confirmation_Price)) + geom_point() + 
   geom_smooth(method = "lm", formula = y ~ x, color = "blue")
 
-correlation <- cor(ACH_cut2$Confirmation_Price, ACH_cut2$Contract_Price)
-p_value <- cor.test(ACH_cut2$Confirmation_Price, ACH_cut2$Contract_Price)$p.value
+correlation <- cor(SYSTEM_cut2$Confirmation_Price, SYSTEM_cut2$Contract_Price)
+p_value <- cor.test(SYSTEM_cut2$Confirmation_Price, SYSTEM_cut2$Contract_Price)$p.value
 
 cat("Correlation:", correlation, "\n")
 cat("P-value:", p_value, "\n" )
 
-summary_Data <- summary(ACH_cut2)
+summary_Data <- summary(SYSTEM_cut2)
 
 #Statistical summary of Confirmation Price column
 summary_Conf_Price <- summary(data_clean)
