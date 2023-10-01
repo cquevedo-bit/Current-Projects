@@ -7,7 +7,7 @@ These projects utilize various libraries and packages including but not limited 
 
 If you would like more information on my Excel Application project documentation is available via email. 
 
-Programming languages: Python, SQL and VBA 
+Programming languages: Python, R, SQL and VBA 
 
 I appreciate your time,
 
