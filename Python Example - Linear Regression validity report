@@ -6,6 +6,11 @@ import textwrap
 from pandas import DataFrame
 import datetime
 
+#In this Python Script we are able to take a list of contracts that a given system is enrolled on and run them through the below query, obtain the results,
+#plot specified columns and using a Linear Regression Model we use a best fit line to gain insights on all POs that have come through on that contract. 
+#For the points plotted we gain the ability to validate them for Vendor Overcharges based on the resulted Coefficient of the fitted line.
+#With this cowfficient we can then assign a value to the contract (Y/N) and move onto the next contract in the list. 
+#All results are stored in an empty list and empty dictionary. 
 
 from sklearn.linear_model import LinearRegression
 
