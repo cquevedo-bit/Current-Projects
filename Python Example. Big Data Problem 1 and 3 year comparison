@@ -6,6 +6,15 @@ import textwrap
 #from pandas import DataFrame
 import datetime
 
+#In this Python Script we were able yo create
+#two different dataframes with two different dataframes and use an inner join between the two tables.
+#This was necessary as we were looking to create a final report with only the most recent pricing discrepancies
+#from the past year shkwing the 1-year amount and the 3-year amount. 
+#By automating the running of each individual System ID in the query and concatting the results in the end we are able to run
+#all reports at once and string them together into one final report. 
+#Automating this process would be crucial for this type of report since doing one by one would be inefficient.
+#Automating this report also allows us to put this into rotation for automation in a PowerBI Dashboard/ Tableau. 
+
 cstring = 'INSERT CONNECTION STRING'
 
 conn = pyodbc.connect(cstring)
