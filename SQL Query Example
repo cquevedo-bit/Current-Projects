@@ -1,0 +1,27 @@
+-- The mock query below mirrors some of the queries 
+-- I use in my day to day for various research and analysis. 
+-- The amount of tables and columns in my actual SQL queries are 
+-- close to 50 so for simplicity this example provides a much more 
+-- clear picture of the complexity. 
+
+USE [INSERT DB NAME]
+
+SELECT
+    EMP.employee_id AS [Employee ID],
+    EMP.first_name AS [First Name],
+    EMP.last_name AS [Last Name],
+    DEP.department_name AS [Department Name],
+    JT.job_title AS [Job Title],
+—- Calculated Column (Nulls handled for Python Script Errors)
+    ISNULL(ROUND(EMP.salary_amount, 2), 0) AS [Salary]
+
+FROM employees AS EMP
+    INNER JOIN departments AS DEP ON EMP.department_id = DEP.department_id
+    LEFT JOIN job_history AS JH ON EMP.employee_id = JH.employee_id
+    RIGHT JOIN job_titles AS JT ON JH.job_id = JT.job_id
+
+WHERE EMP.hire_date >= '2023-01-01'
+    AND  EMP.hire_date < '2023-12-31'
+    AND  JT.job_title IN (‘Analyst’, ‘Manager’, ‘Director’)
+
+ORDER BY EMP.employee_id;
