@@ -1,7 +1,7 @@
 -- The mock query below mirrors some of the queries 
 -- I use in my day to day for various research and analysis. 
 -- The amount of tables and columns in my actual SQL queries are 
--- close to 50 so for simplicity this example provides a much more 
+-- over 50 so for simplicity this example provides a much more 
 -- clear picture of the complexity. 
 
 USE [INSERT DB NAME]
@@ -11,7 +11,7 @@ SELECT EMP.employee_id AS [Employee ID],
     EMP.last_name AS [Last Name],
     DEP.department_name AS [Department Name],
     JT.job_title AS [Job Title],
-—- Calculated Column (Nulls handled for Python Script Errors)
+-- (Nulls handled for Python Script Errors)
     ISNULL(ROUND(EMP.salary_amount, 2), 0) AS [Salary]
 
 FROM employees AS EMP
