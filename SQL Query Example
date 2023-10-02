@@ -6,8 +6,7 @@
 
 USE [INSERT DB NAME]
 
-SELECT
-    EMP.employee_id AS [Employee ID],
+SELECT EMP.employee_id AS [Employee ID],
     EMP.first_name AS [First Name],
     EMP.last_name AS [Last Name],
     DEP.department_name AS [Department Name],
