@@ -12,4 +12,3 @@ Programming languages: Python, R, SQL and VBA
 I appreciate your time,
 
 Cal Quevedo
-(Senior Data Analyst)
